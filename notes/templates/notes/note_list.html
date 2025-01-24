@@ -1,0 +1,24 @@
+<head>
+
+</head>
+<body>
+    {% include 'navbar.html' %}
+    
+    <div class="row">
+        {% for note in object_list %}
+        <div class="col s3 m3">
+            <div class="card grey darken-4">
+                <div class="card-content white-text">
+                    <span class="card-title">{{ note.title }}</span>
+                </div>
+                <div class="card-action center">
+                    <a href="{{ note.pk }}/">Ver nota</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <a href="new/" class="btn-floating btn-large waves-effect waves-light white right"><i class="material-icons black-text">note_add</i></a>
+
+</body>

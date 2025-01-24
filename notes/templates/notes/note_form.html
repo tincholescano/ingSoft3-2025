@@ -1,0 +1,8 @@
+{% include 'navbar.html' %}
+<h1>Crear nueva nota</h1>
+<form method="post" class="grey darken-4">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn white black-text">Crear nota</button>
+</form>
+<a class="btn" href="/notes">Cancelar</a>

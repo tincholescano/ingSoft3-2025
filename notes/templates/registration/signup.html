@@ -1,0 +1,10 @@
+{% include 'navbar.html' %}
+<div class="row white">
+  <h1 class="black-text">Crear cuenta</h1>
+  <form method="post" class="white black-text col s4">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn black white-text ">REGISTRARME</button>
+  </form>
+  
+</div>
