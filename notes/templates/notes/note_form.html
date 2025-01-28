@@ -1,8 +1,17 @@
 {% include 'navbar.html' %}
 <h1>Crear nueva nota</h1>
-<form method="post" class="grey darken-4">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn white black-text">Crear nota</button>
-</form>
+<div class="row">
+    <form method="post" class="" style="color: white;">
+        {% csrf_token %}
+        <div class="row"></div>
+            <label for="id_title">Título:</label>
+            <input type="text" name="title" id="id_title" required style="color: white; border: 1px solid #666;">
+        </div>
+        <div class="row">
+            <label for="id_body">Cuerpo:</label>
+            <textarea name="body" id="id_body" required style="color: white; border: 1px solid #666;"></textarea>
+        </div>
+        <button type="submit" class="btn white black-text">Crear nota</button>
+    </form>
+</div>
 <a class="btn" href="/notes">Cancelar</a>
