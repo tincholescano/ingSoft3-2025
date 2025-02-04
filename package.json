@@ -1,0 +1,27 @@
+{
+  "name": "ingenieria-de-software-3---final-2025",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tincholescano/ingSoft3-2025.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tincholescano/ingSoft3-2025/issues"
+  },
+  "homepage": "https://github.com/tincholescano/ingSoft3-2025#readme",
+  "description": "",
+  "devDependencies": {
+    "@types/node": "^22.13.1",
+    "codeceptjs": "^3.5.9",
+    "puppeteer": "^24.1.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3"
+  }
+}
