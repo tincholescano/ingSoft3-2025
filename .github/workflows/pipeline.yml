@@ -1,0 +1,63 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main  # Corre cuando se hace push a la rama principal
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clonar el repositorio
+        uses: actions/checkout@v3
+
+      - name: Configurar Python y dependencias
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Instalar dependencias
+        run: |
+          pip install -r backend/requirements.txt
+          pip install pytest
+
+      - name: Correr tests de Django
+        run: |
+          cd backend
+          python manage.py test
+
+  build-and-push:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clonar el repositorio
+        uses: actions/checkout@v3
+
+      - name: Configurar Docker
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: Construir y subir la imagen a DockerHub
+        run: |
+          docker build -t miusuario/miapp:latest .
+          docker push miusuario/miapp:latest
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Desplegar en servidor remoto
+        run: |
+          ssh usuario@mi-servidor "docker pull miusuario/miapp:latest && docker-compose up -d"
+
+  test-e2e:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clonar el repositorio
+        uses: actions/checkout@v3
+
+      - name: Instalar dependencias de CodeceptJS
+        run: |
+          npm install
+          npx codeceptjs run --steps

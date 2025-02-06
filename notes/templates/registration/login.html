@@ -11,7 +11,7 @@
         <form method="post" class="col s4">
             {% csrf_token %}
             {{ form.as_p }}
-            <button type="submit" class="btn white black-text">Iniciar Sesion</button>
+            <button type="submit" class="btn yellow black-text">Iniciar Sesion</button>
         </form>
     </div>
     <p>Don't have an account? <a href="{% url 'signup' %}">Sign up here</a>.</p>

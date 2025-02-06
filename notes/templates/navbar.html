@@ -5,15 +5,15 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   </head>
 
-<body class="black white-text">
+<body class="yellow lighten-4 black-text">
     <nav>
-        <div class="nav-wrapper grey darken-4">
-            <a href="/notes" class="brand-logo center">NOTEPAD</a>
+        <div class="nav-wrapper yellow">
+            <a href="/notes" class="brand-logo center black-text">NOTEPAD</a>
             <ul class="right hide-on-med-and-down">
                 <li>    
                     <form method="POST" action="{% url 'logout' %}">
                         {% csrf_token %}
-                        <button type="submit" class="btn-large black white-text">Cerrar sesión</button>
+                        <button type="submit" class="btn-large blue darken-4 white-text">Cerrar sesión</button>
                     </form>
                 </li>
             </ul>
