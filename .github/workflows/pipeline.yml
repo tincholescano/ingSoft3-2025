@@ -51,6 +51,7 @@ jobs:
       - name: Instalar dependencias de CodeceptJS
         run: |
           npm install -g codeceptjs
+          npm install puppeteer
           npx puppeteer browsers install chrome
           chmod +x node_modules/.bin/codeceptjs
           npx codeceptjs run --steps
