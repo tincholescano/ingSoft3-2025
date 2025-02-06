@@ -3,7 +3,7 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - main  # Corre cuando se hace push a la rama principal
+      - main
 
 jobs:
   test:
@@ -24,7 +24,7 @@ jobs:
 
       - name: Correr tests de Django
         run: |
-          cd backend
+          cd notepad
           python manage.py test
 
   build-and-push:
@@ -39,19 +39,11 @@ jobs:
 
       - name: Construir y subir la imagen a DockerHub
         run: |
-          docker build -t miusuario/miapp:latest .
-          docker push miusuario/miapp:latest
-
-  deploy:
-    needs: build-and-push
-    runs-on: ubuntu-latest
-    steps:
-      - name: Desplegar en servidor remoto
-        run: |
-          ssh usuario@mi-servidor "docker pull miusuario/miapp:latest && docker-compose up -d"
+          docker build -t martinlescano/miapp:latest .
+          docker push martinlescano/miapp:latest
 
   test-e2e:
-    needs: deploy
+    needs: build-and-push
     runs-on: ubuntu-latest
     steps:
       - name: Clonar el repositorio
