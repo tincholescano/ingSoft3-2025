@@ -50,5 +50,7 @@ jobs:
 
       - name: Instalar dependencias de CodeceptJS
         run: |
-          npm install
+          npm install -g codeceptjs
+          chmod +x node_modules/.bin/codeceptjs
           npx codeceptjs run --steps
+
