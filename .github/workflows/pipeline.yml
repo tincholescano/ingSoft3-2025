@@ -51,8 +51,15 @@ jobs:
       - name: Instalar dependencias de CodeceptJS
         run: |
           npm install -g codeceptjs
-          npm install puppeteer
-          npx puppeteer browsers install chrome
-          chmod +x node_modules/.bin/codeceptjs
-          npx codeceptjs run --steps
-
+      
+      - name: Ejecutar pruebas E2E
+        run: |
+          npx codeceptjs run --steps --override '{ 
+            "helpers": { 
+              "Puppeteer": { 
+                "chrome": { "executablePath": "/usr/bin/google-chrome-stable" }, 
+                "args": ["--no-sandbox", "--disable-setuid-sandbox"]
+              } 
+            } 
+          }'
+        
