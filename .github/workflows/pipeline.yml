@@ -24,7 +24,6 @@ jobs:
 
       - name: Correr tests de Django
         run: |
-          cd notepad
           python manage.py test
 
   build-and-push:
