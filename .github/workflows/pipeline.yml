@@ -1,65 +1,49 @@
-name: CI/CD Pipeline
+name: Run Django Tests
 
 on:
   push:
+    branches:
+      - main
+  pull_request:
     branches:
       - main
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    steps:
-      - name: Clonar el repositorio
-        uses: actions/checkout@v3
 
-      - name: Configurar Python y dependencias
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: test_db
+          MYSQL_USER: test_user
+          MYSQL_PASSWORD: test_pass
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping --silent" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
+          python-version: 3.10
 
-      - name: Instalar dependencias
+      - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Correr tests de Django
+      - name: Run migrations
+        env:
+          DATABASE_URL: mysql://test_user:test_pass@127.0.0.1:3306/test_db
+        run: |
+          python manage.py migrate
+
+      - name: Run tests
         run: |
           python manage.py test
-
-  build-and-push:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Clonar el repositorio
-        uses: actions/checkout@v3
-
-      - name: Configurar Docker
-        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-
-      - name: Construir y subir la imagen a DockerHub
-        run: |
-          docker build -t martinlescano/miapp:latest .
-          docker push martinlescano/miapp:latest
-
-  test-e2e:
-    needs: build-and-push
-    runs-on: ubuntu-latest
-    steps:
-      - name: Clonar el repositorio
-        uses: actions/checkout@v3
-
-      - name: Instalar dependencias de CodeceptJS
-        run: |
-          npm install -g codeceptjs
-      
-      - name: Ejecutar pruebas E2E
-        run: |
-          npx codeceptjs run --steps --override '{ 
-            "helpers": { 
-              "Puppeteer": { 
-                "chrome": { "executablePath": "/usr/bin/google-chrome-stable" }, 
-                "args": ["--no-sandbox", "--disable-setuid-sandbox"]
-              } 
-            } 
-          }'
-        
