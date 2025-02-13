@@ -11,24 +11,26 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout del código
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Instalar dependencias
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y google-chrome-stable
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.13.1
 
-      - name: Instalar ChromeDriver
+      - name: Install dependencies
         run: |
-          CHROME_VERSION=$(google-chrome --version | grep -oP '[0-9]+(\.[0-9]+)+')
-          CHROMEDRIVER_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION")
-          wget -N "https://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip"
-          unzip chromedriver_linux64.zip
-          sudo mv chromedriver /usr/local/bin/
-          sudo chmod +x /usr/local/bin/chromedriver
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install selenium
 
-      - name: Ejecutar tests
+      - name: Run migrations
+        run: |
+          python manage.py migrate
+
+      - name: Run tests
         run: |
           python manage.py test
