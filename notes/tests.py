@@ -3,13 +3,20 @@
 from django.contrib.auth.models import User
 from django.test import LiveServerTestCase, TestCase
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 import time
 
 class LoginTest(LiveServerTestCase):
     def setUp(self):
-        self.browser = webdriver.Chrome()
+        options = Options()
+        options.add_argument("--headless")  # Corre Chrome sin interfaz gráfica
+        options.add_argument("--no-sandbox")  # Evita problemas de permisos en contenedores
+        options.add_argument("--disable-dev-shm-usage")  # Evita problemas en entornos limitados de memoria
+        options.add_argument("--disable-gpu")  # Desactiva GPU (no es necesaria en headless)
+        
+        self.browser = webdriver.Chrome(options=options)
         self.user = User.objects.create_user(username="testuser", password="testpassword")
 
     def tearDown(self):
@@ -36,7 +43,13 @@ class LoginTest(LiveServerTestCase):
 class RegisterTest(LiveServerTestCase):
 
     def setUp(self):
-        self.browser = webdriver.Chrome()
+        options = Options()
+        options.add_argument("--headless")  # Corre Chrome sin interfaz gráfica
+        options.add_argument("--no-sandbox")  # Evita problemas de permisos en contenedores
+        options.add_argument("--disable-dev-shm-usage")  # Evita problemas en entornos limitados de memoria
+        options.add_argument("--disable-gpu")  # Desactiva GPU (no es necesaria en headless)
+        
+        self.browser = webdriver.Chrome(options=options)
 
     def tearDown(self):
         self.browser.quit()
@@ -63,7 +76,13 @@ class RegisterTest(LiveServerTestCase):
 class AddnoteTest(LiveServerTestCase):
 
     def setUp(self):
-        self.browser = webdriver.Chrome()  # Asegurate de tener Chromedriver instalado
+        options = Options()
+        options.add_argument("--headless")  # Corre Chrome sin interfaz gráfica
+        options.add_argument("--no-sandbox")  # Evita problemas de permisos en contenedores
+        options.add_argument("--disable-dev-shm-usage")  # Evita problemas en entornos limitados de memoria
+        options.add_argument("--disable-gpu")  # Desactiva GPU (no es necesaria en headless)
+        
+        self.browser = webdriver.Chrome(options=options)
 
     def tearDown(self):
         self.browser.quit()
