@@ -6,7 +6,6 @@ on:
       - testing
 
 env:
-
   PROJECT_ID: ${{ secrets.GOOGLECLOUD_PROJECT }}
   REGION: southamerica-east1
   REPO_NAME: gc-ingsoft3-2025
@@ -14,7 +13,6 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -30,16 +28,12 @@ jobs:
           pip install -r requirements.txt
           pip install selenium
 
-      - name: Run migrations
-        run: python manage.py migrate
-
       - name: Run tests
         run: python manage.py test
 
   docker-push:
     needs: test
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -53,10 +47,27 @@ jobs:
       - name: Push Docker image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/ingsoft3-2025:latest
 
+  migrate:
+    needs: docker-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Authenticate with Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: "${{ secrets.GOOGLECLOUD_KEY }}"
+
+      - name: Run Migrations in Cloud Run Job
+        run: |
+          gcloud run jobs describe migrate-job --region=$REGION || \
+          gcloud run jobs create migrate-job \
+            --image=gcr.io/$PROJECT_ID/gc-ingsoft3-2025:latest \
+            --region=$REGION \
+            --command "python" --args "manage.py", "migrate"
+
+          gcloud run jobs execute migrate-job --region=$REGION
 
   deploy-googlecloud:
-    name: Setup, Build, and Deploy
-    needs: docker-push
+    needs: migrate
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -70,28 +81,10 @@ jobs:
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v0
 
-      - name: Authorize Docker push
-        run: gcloud auth configure-docker
-
-      - name: Build and tag the docker image
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        run: |-
-          docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-          docker build -t $DOCKER_USERNAME/ingsoft3-2025:latest .
-          docker push $DOCKER_USERNAME/ingsoft3-2025:latest
-
-      - name: Push the image to the Google Container Registry (GCR)
-        run: |-
-          docker tag martinlescano/ingsoft3-2025:latest gcr.io/neural-mantra-376023/gc-ingsoft3-2025
-          docker push gcr.io/neural-mantra-376023/gc-ingsoft3-2025:latest
-      
       - name: Deploy Backend
         run: |-
           gcloud run deploy gc-ingsoft3-2025 \
           --region $REGION \
-          --image gcr.io/neural-mantra-376023/gc-ingsoft3-2025:latest \
-          --command "python" --args "manage.py", "migrate"
+          --image gcr.io/$PROJECT_ID/gc-ingsoft3-2025:latest \
           --platform "managed" \
           --quiet
