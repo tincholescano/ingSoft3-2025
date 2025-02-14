@@ -1,9 +1,15 @@
-name: Run Django Tests and Deploy
+name: Build and Deploy
 
 on:
   push:
     branches:
       - testing
+
+env:
+
+  PROJECT_ID: ${{ secrets.GOOGLECLOUD_PROJECT }}
+  REGION: southamerica-east1
+  REPO_NAME: gc-ingsoft3-2025
 
 jobs:
   test:
@@ -30,7 +36,7 @@ jobs:
       - name: Run tests
         run: python manage.py test
 
-  build-and-push:
+  docker-push:
     needs: test
     runs-on: ubuntu-latest
 
@@ -47,27 +53,44 @@ jobs:
       - name: Push Docker image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/ingsoft3-2025:latest
 
-  deploy:
-    runs-on: ubuntu-latest
 
+  deploy-googlecloud:
+    name: Setup, Build, and Deploy
+    needs: docker-push
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up SSH key
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
+      - id: "auth"
+        uses: "google-github-actions/auth@v2"
+        with:
+          credentials_json: "${{ secrets.GOOGLECLOUD_KEY }}"
 
-      - name: Deploy to Google Cloud VM
-        run: |
-          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-            cd ingsoft3-2025 || git clone https://github.com/martinlescano/ingsoft3-2025.git && cd ingsoft3-2025
-            git pull origin main
-            docker build -t ingsoft3-2025 .
-            docker stop ingsoft3-2025 || true
-            docker rm ingsoft3-2025 || true
-            docker run -d -p 8000:8000 --name ingsoft3-2025 ingsoft3-2025
-          EOF
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v0
+
+      - name: Authorize Docker push
+        run: gcloud auth configure-docker
+
+      - name: Build and tag the docker image
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: |-
+          docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+          docker build -t $DOCKER_USERNAME/ingsoft3-2025:latest .
+          docker push $DOCKER_USERNAME/ingsoft3-2025:latest
+
+      - name: Push the image to the Google Container Registry (GCR)
+        run: |-
+          docker tag martinlescano/ingsoft3-2025:latest gcr.io/neural-mantra-376023/gc-ingsoft3-2025
+          docker push gcr.io/neural-mantra-376023/gc-ingsoft3-2025:latest
+      
+      - name: Deploy Backend
+        run: |-
+          gcloud run deploy gc-ingsoft3-2025 \
+          --region $REGION \
+          --image gcr.io/neural-mantra-376023/gc-ingsoft3-2025:latest \
+          --platform "managed" \
+          --quiet
