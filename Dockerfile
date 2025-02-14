@@ -1,6 +1,11 @@
 # Usa una imagen base oficial de Python
 FROM python:3.13.1-slim
 
+RUN apt-get update && apt-get install -y \
+    default-libmysqlclient-dev \
+    build-essential \
+    pkg-config
+
 # Establece el directorio de trabajo dentro del contenedor
 WORKDIR /app
 
