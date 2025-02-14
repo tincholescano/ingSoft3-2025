@@ -14,5 +14,7 @@ COPY . /app/
 # Expone el puerto del contenedor (8000 para Django por defecto)
 EXPOSE 8000
 
+RUN python manage.py migrate --noinput
+
 # Comando para iniciar la aplicación
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
