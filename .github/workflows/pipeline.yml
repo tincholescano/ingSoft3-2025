@@ -62,7 +62,7 @@ jobs:
             gcloud run jobs create migrate-job \
               --region=$REGION \
               --image=gcr.io/$PROJECT_ID/gc-ingsoft3-2025:latest \
-              --command "/bin/sh" --args "python manage.py migrate"
+              --command --args "python manage.py migrate"
           fi
 
       - name: Run Cloud Run Job for Migrations
