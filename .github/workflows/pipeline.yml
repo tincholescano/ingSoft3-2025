@@ -1,12 +1,9 @@
-name: CI/CD Pipeline
+name: Run Django Tests and Deploy
 
 on:
   push:
     branches:
-      - testing
-  pull_request:
-    branches:
-      - testing
+      - main
 
 jobs:
   test:
@@ -28,46 +25,49 @@ jobs:
           pip install selenium
 
       - name: Run migrations
-        run: |
-          python manage.py migrate
+        run: python manage.py migrate
 
       - name: Run tests
-        run: |
-          python manage.py test
+        run: python manage.py test
 
   build-and-push:
     needs: test
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Log in to DockerHub
+      - name: Log in to Docker Hub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
       - name: Build Docker image
-        run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/mi_app:latest .
-          docker tag ${{ secrets.DOCKER_USERNAME }}/mi_app:latest ${{ secrets.DOCKER_USERNAME }}/mi_app:${{ github.sha }}
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/ingsoft3-2025:latest .
 
       - name: Push Docker image
-        run: |
-          docker push ${{ secrets.DOCKER_USERNAME }}/mi_app:latest
-          docker push ${{ secrets.DOCKER_USERNAME }}/mi_app:${{ github.sha }}
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/ingsoft3-2025:latest
 
   deploy:
-    needs: build-and-push
     runs-on: ubuntu-latest
 
     steps:
-      - name: Deploy to Server
-        uses: appleboy/ssh-action@v0.1.7
-        with:
-          host: ${{ secrets.SERVER_IP }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            docker pull ${{ secrets.DOCKER_USERNAME }}/mi_app:latest
-            docker stop mi_app || true
-            docker rm mi_app || true
-            docker run -d -p 8000:8000 --name mi_app ${{ secrets.DOCKER_USERNAME }}/mi_app:latest
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
+
+      - name: Deploy to Google Cloud VM
+        run: |
+          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+            cd ingsoft3-2025 || git clone https://github.com/martinlescano/ingsoft3-2025.git && cd ingsoft3-2025
+            git pull origin main
+            docker build -t ingsoft3-2025 .
+            docker stop ingsoft3-2025 || true
+            docker rm ingsoft3-2025 || true
+            docker run -d -p 8000:8000 --name ingsoft3-2025 ingsoft3-2025
+          EOF
