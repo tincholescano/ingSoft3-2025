@@ -35,7 +35,6 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 CSRF_TRUSTED_ORIGINS = [
     "https://gc-ingsoft3-2025-320310590859.southamerica-east1.run.app",
-    "*",
 ]
 
 
