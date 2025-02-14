@@ -56,16 +56,18 @@ jobs:
         with:
           credentials_json: "${{ secrets.GOOGLECLOUD_KEY }}"
 
-      - name: Run Migrations in Cloud Run Job
+      - name: Create Cloud Run Job for Migrations (if not exists)
         run: |
-          gcloud run jobs describe migrate-job --region=$REGION || \
-          gcloud run jobs create migrate-job \
-            --image=gcr.io/$PROJECT_ID/gc-ingsoft3-2025:latest \
-            --region=$REGION \
-            --command "python" --args "manage.py", "migrate"
+          if ! gcloud run jobs describe migrate-job --region=$REGION; then
+            gcloud run jobs create migrate-job \
+              --region=$REGION \
+              --image=gcr.io/$PROJECT_ID/gc-ingsoft3-2025:latest \
+              --command "/bin/sh" --args "-c", "python manage.py migrate"
+          fi
 
-          gcloud run jobs execute migrate-job --region=$REGION
-
+      - name: Run Cloud Run Job for Migrations
+        run: gcloud run jobs execute migrate-job --region=$REGION
+      
   deploy-googlecloud:
     needs: migrate
     runs-on: ubuntu-latest
