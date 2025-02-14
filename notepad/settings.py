@@ -27,8 +27,8 @@ SECRET_KEY = 'django-insecure-)l0$%hi$=k)zxop)*jnpg28zkg891rtm!u9)#pfpbx5@e+!tti
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    "*",
     "gc-ingsoft3-2025-320310590859.southamerica-east1.run.app",
+    "localhost"
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
