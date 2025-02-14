@@ -92,5 +92,6 @@ jobs:
           gcloud run deploy gc-ingsoft3-2025 \
           --region $REGION \
           --image gcr.io/neural-mantra-376023/gc-ingsoft3-2025:latest \
+          --command "python" --args "manage.py", "migrate"
           --platform "managed" \
           --quiet
