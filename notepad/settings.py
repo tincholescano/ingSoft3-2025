@@ -95,9 +95,6 @@ DATABASES = {
         'USER': "ub1rw4t8epl8oipn",
         'PASSWORD': "0ildNPw6HQ23SSluYnFW",
         'PORT': "3306",
-        'TEST': {
-            'MIRROR': 'default',
-        }
     }
 }
 
