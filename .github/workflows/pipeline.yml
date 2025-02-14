@@ -11,28 +11,7 @@ env:
   REPO_NAME: gc-ingsoft3-2025
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: 3.13.1
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install selenium
-
-      - name: Run tests
-        run: python manage.py test
-
   docker-push:
-    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -91,3 +70,24 @@ jobs:
           --image gcr.io/$PROJECT_ID/gc-ingsoft3-2025:latest \
           --platform "managed" \
           --quiet
+
+  test:
+    needs: deploy-googlecloud
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.13.1
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install selenium
+
+      - name: Run tests
+        run: python manage.py test
