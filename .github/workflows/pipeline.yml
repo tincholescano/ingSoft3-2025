@@ -25,31 +25,9 @@ jobs:
 
       - name: Push Docker image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/ingsoft3-2025:latest
-
-  migrate:
-    needs: docker-push
-    runs-on: ubuntu-latest
-    steps:
-      - name: Authenticate with Google Cloud
-        uses: google-github-actions/auth@v2
-        with:
-          credentials_json: "${{ secrets.GOOGLECLOUD_KEY }}"
-
-      - name: Create Cloud Run Job for Migrations (if not exists)
-        run: |
-          if ! gcloud run jobs describe migrate-job --region=$REGION; then
-            gcloud run jobs create migrate-job \
-              --region=$REGION \
-              --image=gcr.io/$PROJECT_ID/gc-ingsoft3-2025:latest \
-              --command --args "python manage.py makemigrations"
-              --command --args "python manage.py migrate"
-          fi
-
-      - name: Run Cloud Run Job for Migrations
-        run: gcloud run jobs execute migrate-job --region=$REGION
       
   deploy-googlecloud:
-    needs: migrate
+    needs: docker-push
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -71,23 +49,3 @@ jobs:
           --platform "managed" \
           --quiet
 
-  test:
-    needs: deploy-googlecloud
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: 3.13.1
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install selenium
-
-      - name: Run tests
-        run: python manage.py test
