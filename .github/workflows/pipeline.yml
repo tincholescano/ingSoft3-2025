@@ -3,7 +3,7 @@ name: Run Django Tests and Deploy
 on:
   push:
     branches:
-      - main
+      - testing
 
 jobs:
   test:
