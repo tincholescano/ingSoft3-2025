@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
+import pymysql
+
+pymysql.install_as_MySQLdb()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,7 +29,16 @@ SECRET_KEY = 'django-insecure-)l0$%hi$=k)zxop)*jnpg28zkg891rtm!u9)#pfpbx5@e+!tti
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    ".southamerica-east1.run.app",
+    "*"
+]
+
+CORS_ALLOW_ALL_ORIGINS = True
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://gc-ingsoft3-2025-320310590859.southamerica-east1.run.app",
+]
 
 
 # Application definition
@@ -77,8 +89,12 @@ WSGI_APPLICATION = 'notepad.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'HOST': "bnmrlvfrsnrettrqgicy-mysql.services.clever-cloud.com",
+        'NAME': "bnmrlvfrsnrettrqgicy",
+        'USER': "ub1rw4t8epl8oipn",
+        'PASSWORD': "0ildNPw6HQ23SSluYnFW",
+        'PORT': "3306",
     }
 }
 
