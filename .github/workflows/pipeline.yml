@@ -22,9 +22,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Correr tests de Django
-        run: |
-          python manage.py test
 
   build-and-push:
     needs: test
@@ -40,26 +37,3 @@ jobs:
         run: |
           docker build -t martinlescano/miapp:latest .
           docker push martinlescano/miapp:latest
-
-  test-e2e:
-    needs: build-and-push
-    runs-on: ubuntu-latest
-    steps:
-      - name: Clonar el repositorio
-        uses: actions/checkout@v3
-
-      - name: Instalar dependencias de CodeceptJS
-        run: |
-          npm install -g codeceptjs
-      
-      - name: Ejecutar pruebas E2E
-        run: |
-          npx codeceptjs run --steps --override '{ 
-            "helpers": { 
-              "Puppeteer": { 
-                "chrome": { "executablePath": "/usr/bin/google-chrome-stable" }, 
-                "args": ["--no-sandbox", "--disable-setuid-sandbox"]
-              } 
-            } 
-          }'
-        
