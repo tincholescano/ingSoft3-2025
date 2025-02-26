@@ -3,11 +3,12 @@ name: Deploy Django App
 on:
   push:
     branches:
-      - main  # O la rama que uses para producción
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3

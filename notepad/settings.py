@@ -87,15 +87,14 @@ WSGI_APPLICATION = 'notepad.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.environ.get('DATABASE_NAME'),  
-        'USER': os.environ.get('DATABASE_USER'),  
-        'PASSWORD': os.environ.get('DATABASE_PASSWORD'),  
-        'HOST': os.environ.get('DATABASE_HOST'),  
-        'PORT': os.environ.get('DATABASE_PORT', '3306'),  
+        'NAME': os.getenv('DATABASE_NAME', 'bnmrlvfrsnrettrqgicy'),
+        'USER': os.getenv('DATABASE_USER', 'ub1rw4t8epl8oipn'),
+        'PASSWORD': os.getenv('DATABASE_PASSWORD', '0ildNPw6HQ23SSluYnFW'),
+        'HOST': os.getenv('DATABASE_HOST', 'bnmrlvfrsnrettrqgicy-mysql.services.clever-cloud.com'),  # Asegúrate que sea la de Clever Cloud
+        'PORT': os.getenv('DATABASE_PORT', '3306'),
     }
 }
 
