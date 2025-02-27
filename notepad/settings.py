@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 import os
 import pymysql
+import sys
 
 pymysql.install_as_MySQLdb()
 
@@ -87,6 +88,7 @@ WSGI_APPLICATION = 'notepad.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -95,6 +97,11 @@ DATABASES = {
         'PASSWORD': os.getenv('DATABASE_PASSWORD', '0ildNPw6HQ23SSluYnFW'),
         'HOST': os.getenv('DATABASE_HOST', 'bnmrlvfrsnrettrqgicy-mysql.services.clever-cloud.com'),  # Asegúrate que sea la de Clever Cloud
         'PORT': os.getenv('DATABASE_PORT', '3306'),
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        },
+        'TEST': {'MIRROR': 'default'}
+
     }
 }
 
