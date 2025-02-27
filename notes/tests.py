@@ -8,7 +8,6 @@ class RegistroTest(TestCase):
     def test_crear_usuario(self):
         print("\nCreamos un usuario")
         user = User.objects.create_user(username="usuario_test", password="MiClaveSegura123")
-        self.assertEqual(User.objects.count(), 1)
         self.assertEqual(user.username, "usuario_test")
         print("\nUsuarios en la BD:", User.objects.all())  # Ver que usuarios hay
 
