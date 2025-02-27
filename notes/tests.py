@@ -1,3 +1,5 @@
+# Test unitarios con Django Test
+
 from django.test import TestCase
 from django.contrib.auth.models import User
 from notes.models import Note
@@ -8,7 +10,7 @@ class RegistroTest(TestCase):
         user = User.objects.create_user(username="usuario_test", password="MiClaveSegura123")
         self.assertEqual(User.objects.count(), 1)
         self.assertEqual(user.username, "usuario_test")
-        print("\nUsuarios en la BD:", User.objects.all())  # Ver qué usuarios hay
+        print("\nUsuarios en la BD:", User.objects.all())  # Ver que usuarios hay
 
     def test_login_usuario(self):
         print("\nIniciamos sesion con ese usuario")
