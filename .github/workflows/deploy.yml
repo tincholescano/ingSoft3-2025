@@ -105,6 +105,7 @@ jobs:
 
       - name: Push the image to the Google Container Registry (GCR)
         run: |-
+          docker pull martinlescano/django-app
           docker tag martinlescano/django-app gcr.io/ingenieriasoftware3/gc-django-app:latest
           docker push gcr.io/ingenieriasoftware3/gc-django-app:latest
 
