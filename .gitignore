@@ -16,3 +16,7 @@ __pycache__/
 # Migraciones y configuraciones de VSCode (opcional)
 migrations/
 .vscode/
+
+# Node modules
+node_modules/
+node_modules

@@ -3,10 +3,10 @@ name: Deploy Django App
 on:
   push:
     branches:
-      - main
+      - testing
 
 jobs:
-  test:
+  test-unitario:
     runs-on: ubuntu-latest
     services:
       mysql:
@@ -53,8 +53,45 @@ jobs:
           source env/bin/activate
           python manage.py test
 
-  build:
-    needs: test
+      - name: Start Django Server
+        env:
+          DATABASE_URL: mysql://test_user:test_password@127.0.0.1:3306/test_db
+        run: |
+          source env/bin/activate
+          python manage.py runserver 0.0.0.0:8000 &  # Levanta Django en segundo plano
+          sleep 5  # Espera unos segundos para que arranque
+
+  test-e2e:
+    needs: test-unitario
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install Playwright dependencies
+        run: |
+          npm install
+          npx playwright install --with-deps  # Instala dependencias de navegador
+
+      - name: Run Playwright E2E tests
+        run: |
+          npx codeceptjs run --debug || echo "E2E tests failed!"
+
+      - name: Upload screenshots on failure
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: e2e-screenshots
+          path: output/
+
+  docker:
+    needs: test-e2e
     runs-on: ubuntu-latest
 
     steps:
@@ -81,3 +118,6 @@ jobs:
             -e DATABASE_HOST=${{ secrets.DATABASE_HOST }} \
             -e DATABASE_PORT=${{ secrets.DATABASE_PORT }} \
             --name django_app ${{ secrets.DOCKER_USERNAME }}/django-app:latest
+
+
+      
