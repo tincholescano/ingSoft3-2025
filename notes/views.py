@@ -6,9 +6,10 @@ from django.urls import reverse_lazy
 from .models import Note
 from django.contrib.auth.forms import UserCreationForm
 from django.http import Http404
-
+from django.views.decorators.csrf import csrf_exempt
 
 @method_decorator(login_required, name="dispatch")
+@method_decorator(csrf_exempt, name="dispatch")
 class NoteListView(ListView):
     model = Note
     template_name = "notes/note_list.html"
@@ -16,6 +17,7 @@ class NoteListView(ListView):
     def get_queryset(self):
         return Note.objects.filter(user=self.request.user)
 
+@method_decorator(csrf_exempt, name="dispatch")
 @method_decorator(login_required, name="dispatch")
 class NoteDetailView(DetailView):
     model = Note
@@ -35,6 +37,7 @@ class NoteDetailView(DetailView):
         
         return obj
 
+@method_decorator(csrf_exempt, name="dispatch")
 @method_decorator(login_required, name="dispatch")
 class NoteCreateView(CreateView):
     model = Note

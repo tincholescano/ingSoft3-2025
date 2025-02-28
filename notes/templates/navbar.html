@@ -12,7 +12,7 @@
             <ul class="right hide-on-med-and-down">
                 <li>    
                     <form method="POST" action="{% url 'logout' %}">
-                        {% csrf_token %}
+                        <!-- No incluir {% csrf_token %} aquí -->
                         <button type="submit" class="btn-large blue darken-4 white-text">Cerrar sesión</button>
                     </form>
                 </li>
