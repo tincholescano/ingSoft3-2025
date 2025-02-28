@@ -13,13 +13,11 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 import os
 import pymysql
-import sys
 
 pymysql.install_as_MySQLdb()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -31,16 +29,23 @@ SECRET_KEY = 'django-insecure-)l0$%hi$=k)zxop)*jnpg28zkg891rtm!u9)#pfpbx5@e+!tti
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    # ".southamerica-east1.run.app",
+    "gc-django-app-340020449796.*",
+    "localhost",
+    "127.0.0.1",
     "*"
 ]
 
-CORS_ALLOW_ALL_ORIGINS = True
+
+CSRF_TRUSTED_ORIGINS = os.getenv("DJANGO_CSRF_TRUSTED_ORIGINS", "").split()
 
 CSRF_TRUSTED_ORIGINS = [
-    # "https://gc-ingsoft3-2025-320310590859.southamerica-east1.run.app",
+    "https://gc-django-app-340020449796.*",
+    "https://*",
+    "http://gc-django-app-340020449796.*",
+    "http://*",
 ]
 
+CORS_ALLOW_ALL_ORIGINS = True
 
 # Application definition
 
@@ -58,7 +63,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -151,3 +156,29 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = "/accounts/login/"
 LOGIN_REDIRECT_URL = "/notes/"
 LOGOUT_REDIRECT_URL = "/accounts/login/"
+
+
+ALLOWED_HOSTS = [
+    "gc-django-app-340020449796.*",
+    "localhost",
+    "127.0.0.1",
+    "*"
+]
+
+
+CSRF_TRUSTED_ORIGINS = os.getenv("DJANGO_CSRF_TRUSTED_ORIGINS", "").split()
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://gc-django-app-340020449796.*",
+    "https://*",
+    "http://gc-django-app-340020449796.*",
+    "http://*",
+]
+
+CSRF_TRUSTED_ORIGINS = ["https://gc-django-app-340020449796.us-central1.run.app"]
+
+# Permitir CSRF sin verificar Origin (No recomendado para producción)
+CSRF_USE_SESSIONS = True
+CSRF_COOKIE_HTTPONLY = False
+CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_SAMESITE = 'None'
