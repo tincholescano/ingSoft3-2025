@@ -31,7 +31,13 @@ SECRET_KEY = 'django-insecure-)l0$%hi$=k)zxop)*jnpg28zkg891rtm!u9)#pfpbx5@e+!tti
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["https://gc-django-app-340020449796.us-central1.run.app/"]
+ALLOWED_HOSTS = [
+    "gc-django-app-340020449796.us-central1.run.app",
+    "localhost",
+    "127.0.0.1",
+    "*"
+]
+
 
 CSRF_TRUSTED_ORIGINS = os.getenv("DJANGO_CSRF_TRUSTED_ORIGINS", "").split()
 
