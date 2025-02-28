@@ -1,7 +1,7 @@
 Feature('notas');
 
 Scenario('test Account',  ({ I }) => {
-    I.amOnPage('http://127.0.0.1:8000/accounts/login/?next=/notes/');
+    I.amOnPage('https://gc-django-app-340020449796.us-central1.run.app/accounts/login/?next=/notes/');
 		I.saveScreenshot('1-SesionSinIniciar.png');
 		I.pressKey('Enter');
 		I.saveScreenshot('2-ErrorSinDatos.png');
@@ -11,10 +11,10 @@ Scenario('test Account',  ({ I }) => {
 });
 
 Scenario('test Notas',  ({ I }) => {
-    I.amOnPage('http://127.0.0.1:8000/accounts/login/?next=/notes/');	
+    I.amOnPage('https://gc-django-app-340020449796.us-central1.run.app/accounts/login/?next=/notes/');	
 		I.login('admin', 'Cont1234');	
 
-	I.amOnPage('http://127.0.0.1:8000/notes/');
+	I.amOnPage('https://gc-django-app-340020449796.us-central1.run.app/notes/');
 		I.saveScreenshot('4-Notas.png');
 		I.click('note_add'); // Botón para agregar nota
 		I.waitForElement('#id_title', 5);
@@ -24,7 +24,7 @@ Scenario('test Notas',  ({ I }) => {
 		I.saveScreenshot('5-CompletoForm.png');
 		I.click('note_add');
 		
-	I.amOnPage('http://127.0.0.1:8000/notes/');
+	I.amOnPage('https://gc-django-app-340020449796.us-central1.run.app/notes/');
 		I.saveScreenshot('6-NuevaNota.png');
 		I.see('Mi primera nota'); // Verifica que la nota aparece en el listado
 		I.click('Ver nota');

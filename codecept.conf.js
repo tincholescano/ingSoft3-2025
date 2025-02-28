@@ -13,8 +13,8 @@ exports.config = {
   helpers: {
     Playwright: {
       browser: 'chromium',
-      url: 'http://127.0.0.1:8000/notes/',
-      show: false
+      url: 'https://gc-django-app-340020449796.us-central1.run.app/notes/',
+      show: true
     }
   },
   include: {
