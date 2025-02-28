@@ -8,7 +8,7 @@ module.exports = function() {
     // in this file you can append custom step methods to 'I' object
 
     login(username, password) {
-      this.amOnPage('http://localhost:8000/accounts/login/');
+      this.amOnPage('http://127.0.0.1:8000/accounts/login/');
         this.fillField('#id_username', username);
         this.fillField('#id_password', password);
         this.pressKey('Enter');

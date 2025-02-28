@@ -13,7 +13,7 @@ exports.config = {
   helpers: {
     Playwright: {
       browser: 'chromium',
-      url: 'http://localhost:8000/notes/',
+      url: 'http://127.0.0.1:8000/notes/',
       show: false
     }
   },
