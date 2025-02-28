@@ -83,6 +83,12 @@ jobs:
         run: |
           npx codeceptjs run --debug || echo "E2E tests failed!"
 
+      - name: Upload screenshots on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-screenshots
+          path: output/
 
   docker:
     needs: test-e2e
