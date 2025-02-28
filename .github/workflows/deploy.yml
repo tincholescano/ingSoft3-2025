@@ -74,14 +74,9 @@ jobs:
         with:
           node-version: 18
 
-      - name: Install Playwright dependencies
+      - name: Run E2E tests
         run: |
-          npm install
-          npx playwright install --with-deps  # Instala dependencias de navegador
-
-      - name: Run Playwright E2E tests
-        run: |
-          npx codeceptjs run --debug || echo "E2E tests failed!"
+          npx codeceptjs run --steps
 
       - name: Upload screenshots on failure
         if: failure()
