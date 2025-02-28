@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-)l0$%hi$=k)zxop)*jnpg28zkg891rtm!u9)#pfpbx5@e+!tti
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    "gc-django-app-340020449796.us-central1.run.app",
+    "gc-django-app-340020449796.*",
     "localhost",
     "127.0.0.1",
     "*"
@@ -40,8 +40,10 @@ ALLOWED_HOSTS = [
 CSRF_TRUSTED_ORIGINS = os.getenv("DJANGO_CSRF_TRUSTED_ORIGINS", "").split()
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://gc-django-app-340020449796.us-central1.run.app/",
-    "https://*"
+    "https://gc-django-app-340020449796.*",
+    "https://*",
+    "http://gc-django-app-340020449796.*",
+    "http://*",
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
@@ -169,5 +171,7 @@ CSRF_TRUSTED_ORIGINS = os.getenv("DJANGO_CSRF_TRUSTED_ORIGINS", "").split()
 
 CSRF_TRUSTED_ORIGINS = [
     "https://gc-django-app-340020449796.*",
-    "https://*"
+    "https://*",
+    "http://gc-django-app-340020449796.*",
+    "http://*",
 ]
