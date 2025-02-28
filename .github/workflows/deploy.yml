@@ -71,8 +71,12 @@ jobs:
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
-        with:
-          node-version: 18
+
+      - name: Install dependencies
+        run: 
+          npm install
+          npx create-codeceptjs .  
+          npx codeceptjs init
 
       - name: Run E2E tests
         run: |
