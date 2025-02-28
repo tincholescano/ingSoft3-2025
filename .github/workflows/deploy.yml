@@ -3,10 +3,10 @@ name: Deploy Django App
 on:
   push:
     branches:
-      - main
+      - testing
 
 jobs:
-  test:
+  test-unitario:
     runs-on: ubuntu-latest
     services:
       mysql:
@@ -52,9 +52,9 @@ jobs:
         run: |
           source env/bin/activate
           python manage.py test
-
-  build:
-    needs: test
+ 
+  docker:
+    needs: test-unitario
     runs-on: ubuntu-latest
 
     steps:
@@ -81,3 +81,6 @@ jobs:
             -e DATABASE_HOST=${{ secrets.DATABASE_HOST }} \
             -e DATABASE_PORT=${{ secrets.DATABASE_PORT }} \
             --name django_app ${{ secrets.DOCKER_USERNAME }}/django-app:latest
+
+
+      

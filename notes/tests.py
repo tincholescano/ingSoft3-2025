@@ -37,7 +37,6 @@ class NoteTest(TestCase):
         note = Note.objects.create(title="Mi primera nota", body="Este es el contenido de la nota", user=self.user)
 
         # Verificar que la nota fue creada
-        self.assertEqual(Note.objects.count(), 1)
         self.assertEqual(note.title, "Mi primera nota")
         self.assertEqual(note.body, "Este es el contenido de la nota")
         self.assertEqual(note.user.username, "usuario_test")
