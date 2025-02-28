@@ -174,3 +174,11 @@ CSRF_TRUSTED_ORIGINS = [
     "http://gc-django-app-340020449796.*",
     "http://*",
 ]
+
+CSRF_TRUSTED_ORIGINS = ["https://gc-django-app-340020449796.us-central1.run.app"]
+
+# Permitir CSRF sin verificar Origin (No recomendado para producción)
+CSRF_USE_SESSIONS = True
+CSRF_COOKIE_HTTPONLY = False
+CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_SAMESITE = 'None'
