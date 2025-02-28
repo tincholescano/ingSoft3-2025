@@ -39,6 +39,7 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 CSRF_TRUSTED_ORIGINS = [
     "https://gc-django-app-340020449796.us-central1.run.app/",
+    "*",
 ]
 
 
