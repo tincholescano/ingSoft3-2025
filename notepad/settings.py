@@ -20,6 +20,7 @@ pymysql.install_as_MySQLdb()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+CSRF_TRUSTED_ORIGINS = os.getenv("DJANGO_CSRF_TRUSTED_ORIGINS", "").split()
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -31,9 +32,13 @@ SECRET_KEY = 'django-insecure-)l0$%hi$=k)zxop)*jnpg28zkg891rtm!u9)#pfpbx5@e+!tti
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    "https://gc-django-app-340020449796.us-central1.run.app/*",
-    "*"
+    "https://gc-django-app-340020449796.us-central1.run.app/"
 ]
+
+ALLOWED_HOSTS = ["gc-django-app-340020449796.us-central1.run.app"]
+
+CSRF_TRUSTED_ORIGINS = os.getenv("DJANGO_CSRF_TRUSTED_ORIGINS", "").split()
+
 
 CORS_ALLOW_ALL_ORIGINS = True
 

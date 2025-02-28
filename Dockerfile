@@ -10,6 +10,9 @@ COPY . .
 # Instalar dependencias
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Configurar variable de entorno para Django
+ENV DJANGO_CSRF_TRUSTED_ORIGINS="https://gc-django-app-340020449796.us-central1.run.app"
+
 # Exponer el puerto donde corre Django
 EXPOSE 8000
 
